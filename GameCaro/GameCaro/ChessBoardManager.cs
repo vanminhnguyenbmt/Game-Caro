@@ -25,18 +25,96 @@ namespace GameCaro
                 chessBoard = value;
             }
         }
+
+        private List<Player> player;
+
+        public List<Player> Player
+        {
+            get
+            {
+                return player;
+            }
+
+            set
+            {
+                player = value;
+            }
+        }
+
+        private int currentPlayer;
+
+        public int CurrentPlayer
+        {
+            get
+            {
+                return currentPlayer;
+            }
+
+            set
+            {
+                currentPlayer = value;
+            }
+        }
+
+        private TextBox playerName;
+
+        public TextBox PlayerName
+        {
+            get
+            {
+                return playerName;
+            }
+
+            set
+            {
+                playerName = value;
+            }
+        }
+
+        private PictureBox playerMark;
+
+        public PictureBox PlayerMark
+        {
+            get
+            {
+                return playerMark;
+            }
+
+            set
+            {
+                playerMark = value;
+            }
+        }
+
+        
+
         #endregion
 
         #region Initialize
-        public ChessBoardManager(Panel chessBoard)
+        public ChessBoardManager(Panel chessBoard, TextBox playerName, PictureBox mark)
         {
-            this.chessBoard = chessBoard;
+            this.ChessBoard = chessBoard;
+            this.PlayerName = playerName;
+            this.PlayerMark = mark;
+            
+            this.Player = new List<Player>()
+            {
+                new Player("Player 1", Image.FromFile(Application.StartupPath + "\\Resources\\P1.png")),
+                new Player("Player 2", Image.FromFile(Application.StartupPath + "\\Resources\\P2.png"))
+            };
+
+            CurrentPlayer = 0;
+
+            ChangePlayer();
         }
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Hàm tạo bàng cờ
+        /// </summary>
         public void DrawChessBoard()
-        {
+        { 
             Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
             for (int i = 0; i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
@@ -46,16 +124,50 @@ namespace GameCaro
                     {
                         Width = Cons.CHESS_WIDTH,
                         Height = Cons.CHESS_HEIGHT,
-                        Location = new Point(oldButton.Location.X + oldButton.Width, oldButton.Location.Y)
+                        Location = new Point(oldButton.Location.X + oldButton.Width, oldButton.Location.Y),
+                        BackgroundImageLayout = ImageLayout.Stretch
                     };
 
-                    chessBoard.Controls.Add(btn);
+                    btn.Click += Btn_Click;
+
+                    ChessBoard.Controls.Add(btn);
                     oldButton = btn;
                 }
                 oldButton.Location = new Point(0, oldButton.Location.Y + Cons.CHESS_HEIGHT);
                 oldButton.Width = 0;
                 oldButton.Height = 0;
             }
+        }
+
+        //sự kiện click cho ô cờ
+        private void Btn_Click(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+
+            if (btn.BackgroundImage != null)
+                return;
+
+            Mark(btn);
+
+            ChangePlayer();
+
+            
+        }
+
+        private void Mark(Button btn)
+        {
+            //đổi icon x, o
+            btn.BackgroundImage = Player[CurrentPlayer].Mark;
+
+            CurrentPlayer = CurrentPlayer == 1 ? 0 : 1;
+        }
+
+        private void ChangePlayer()
+        {
+            //đổi tên người chơi
+            PlayerName.Text = Player[CurrentPlayer].Name;
+
+            PlayerMark.Image = Player[CurrentPlayer].Mark;
         }
         #endregion
     }

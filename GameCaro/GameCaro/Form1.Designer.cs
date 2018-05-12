@@ -31,18 +31,18 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pnlChessBoard = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.txtPlayerName = new System.Windows.Forms.TextBox();
-            this.prcbCoolDown = new System.Windows.Forms.ProgressBar();
-            this.txtIP = new System.Windows.Forms.TextBox();
-            this.btnLAN = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.pctbMark = new System.Windows.Forms.PictureBox();
             this.pctbAvatar = new System.Windows.Forms.PictureBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnLAN = new System.Windows.Forms.Button();
+            this.txtIP = new System.Windows.Forms.TextBox();
+            this.pctbMark = new System.Windows.Forms.PictureBox();
+            this.prcbCoolDown = new System.Windows.Forms.ProgressBar();
+            this.txtPlayerName = new System.Windows.Forms.TextBox();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).BeginInit();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbMark)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlChessBoard
@@ -61,6 +61,17 @@
             this.panel2.Size = new System.Drawing.Size(250, 250);
             this.panel2.TabIndex = 1;
             // 
+            // pctbAvatar
+            // 
+            this.pctbAvatar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.pctbAvatar.BackgroundImage = global::GameCaro.Properties.Resources.caro;
+            this.pctbAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pctbAvatar.Location = new System.Drawing.Point(3, 3);
+            this.pctbAvatar.Name = "pctbAvatar";
+            this.pctbAvatar.Size = new System.Drawing.Size(244, 244);
+            this.pctbAvatar.TabIndex = 0;
+            this.pctbAvatar.TabStop = false;
+            // 
             // panel3
             // 
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -75,38 +86,6 @@
             this.panel3.Size = new System.Drawing.Size(250, 223);
             this.panel3.TabIndex = 2;
             // 
-            // txtPlayerName
-            // 
-            this.txtPlayerName.Location = new System.Drawing.Point(3, 3);
-            this.txtPlayerName.Name = "txtPlayerName";
-            this.txtPlayerName.ReadOnly = true;
-            this.txtPlayerName.Size = new System.Drawing.Size(135, 20);
-            this.txtPlayerName.TabIndex = 0;
-            // 
-            // prcbCoolDown
-            // 
-            this.prcbCoolDown.Location = new System.Drawing.Point(4, 30);
-            this.prcbCoolDown.Name = "prcbCoolDown";
-            this.prcbCoolDown.Size = new System.Drawing.Size(134, 23);
-            this.prcbCoolDown.TabIndex = 1;
-            // 
-            // txtIP
-            // 
-            this.txtIP.Location = new System.Drawing.Point(4, 60);
-            this.txtIP.Name = "txtIP";
-            this.txtIP.Size = new System.Drawing.Size(134, 20);
-            this.txtIP.TabIndex = 3;
-            this.txtIP.Text = "127.0.0.1";
-            // 
-            // btnLAN
-            // 
-            this.btnLAN.Location = new System.Drawing.Point(4, 87);
-            this.btnLAN.Name = "btnLAN";
-            this.btnLAN.Size = new System.Drawing.Size(134, 23);
-            this.btnLAN.TabIndex = 4;
-            this.btnLAN.Text = "Connect";
-            this.btnLAN.UseVisualStyleBackColor = true;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -117,24 +96,46 @@
             this.label1.TabIndex = 5;
             this.label1.Text = "5 items in a line to win";
             // 
+            // btnLAN
+            // 
+            this.btnLAN.Location = new System.Drawing.Point(4, 87);
+            this.btnLAN.Name = "btnLAN";
+            this.btnLAN.Size = new System.Drawing.Size(134, 23);
+            this.btnLAN.TabIndex = 4;
+            this.btnLAN.Text = "Connect";
+            this.btnLAN.UseVisualStyleBackColor = true;
+            // 
+            // txtIP
+            // 
+            this.txtIP.Location = new System.Drawing.Point(4, 60);
+            this.txtIP.Name = "txtIP";
+            this.txtIP.Size = new System.Drawing.Size(134, 20);
+            this.txtIP.TabIndex = 3;
+            this.txtIP.Text = "127.0.0.1";
+            // 
             // pctbMark
             // 
             this.pctbMark.Location = new System.Drawing.Point(147, 3);
             this.pctbMark.Name = "pctbMark";
             this.pctbMark.Size = new System.Drawing.Size(100, 107);
+            this.pctbMark.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pctbMark.TabIndex = 2;
             this.pctbMark.TabStop = false;
             // 
-            // pctbAvatar
+            // prcbCoolDown
             // 
-            this.pctbAvatar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.pctbAvatar.BackgroundImage = global::GameCaro.Properties.Resources.caro;
-            this.pctbAvatar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pctbAvatar.Location = new System.Drawing.Point(3, 3);
-            this.pctbAvatar.Name = "pctbAvatar";
-            this.pctbAvatar.Size = new System.Drawing.Size(244, 244);
-            this.pctbAvatar.TabIndex = 0;
-            this.pctbAvatar.TabStop = false;
+            this.prcbCoolDown.Location = new System.Drawing.Point(4, 30);
+            this.prcbCoolDown.Name = "prcbCoolDown";
+            this.prcbCoolDown.Size = new System.Drawing.Size(134, 23);
+            this.prcbCoolDown.TabIndex = 1;
+            // 
+            // txtPlayerName
+            // 
+            this.txtPlayerName.Location = new System.Drawing.Point(3, 3);
+            this.txtPlayerName.Name = "txtPlayerName";
+            this.txtPlayerName.ReadOnly = true;
+            this.txtPlayerName.Size = new System.Drawing.Size(135, 20);
+            this.txtPlayerName.TabIndex = 0;
             // 
             // Form1
             // 
@@ -148,10 +149,10 @@
             this.Name = "Form1";
             this.Text = "Game Caro LAN";
             this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbMark)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).EndInit();
             this.ResumeLayout(false);
 
         }
