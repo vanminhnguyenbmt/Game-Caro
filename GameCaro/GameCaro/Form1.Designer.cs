@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.pnlChessBoard = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -39,6 +40,7 @@
             this.pctbMark = new System.Windows.Forms.PictureBox();
             this.prcbCoolDown = new System.Windows.Forms.ProgressBar();
             this.txtPlayerName = new System.Windows.Forms.TextBox();
+            this.tmCoolDown = new System.Windows.Forms.Timer(this.components);
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).BeginInit();
             this.panel3.SuspendLayout();
@@ -137,6 +139,10 @@
             this.txtPlayerName.Size = new System.Drawing.Size(135, 20);
             this.txtPlayerName.TabIndex = 0;
             // 
+            // tmCoolDown
+            // 
+            this.tmCoolDown.Tick += new System.EventHandler(this.tmCoolDown_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -169,6 +175,7 @@
         private System.Windows.Forms.PictureBox pctbMark;
         private System.Windows.Forms.ProgressBar prcbCoolDown;
         private System.Windows.Forms.TextBox txtPlayerName;
+        private System.Windows.Forms.Timer tmCoolDown;
     }
 }
 

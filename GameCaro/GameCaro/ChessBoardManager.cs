@@ -12,7 +12,6 @@ namespace GameCaro
     {
         #region Properties
         private Panel chessBoard;
-
         public Panel ChessBoard
         {
             get
@@ -26,8 +25,10 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Danh sách đối tượng Player gồm tên và tích của người chơi
+        /// </summary>
         private List<Player> player;
-
         public List<Player> Player
         {
             get
@@ -41,8 +42,10 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Vị trí index của người chơi hiện tại
+        /// </summary>
         private int currentPlayer;
-
         public int CurrentPlayer
         {
             get
@@ -56,8 +59,10 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Tên người chơi
+        /// </summary>
         private TextBox playerName;
-
         public TextBox PlayerName
         {
             get
@@ -71,8 +76,10 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Tích đánh của người chơi
+        /// </summary>
         private PictureBox playerMark;
-
         public PictureBox PlayerMark
         {
             get
@@ -86,8 +93,10 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Ma trận danh sách lưu lại các ô cờ
+        /// </summary>
         private List<List<Button>> matrix;
-
         public List<List<Button>> Matrix
         {
             get
@@ -101,6 +110,37 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Event khi người chơi đánh 1 ô cờ
+        /// </summary>
+        private event EventHandler playerMarked;
+        public event EventHandler PlayerMarked
+        {
+            add
+            {
+                playerMarked += value;
+            }
+            remove
+            {
+                playerMarked -= value;
+            }
+        }
+
+        /// <summary>
+        /// Event kết thúc trò chơi
+        /// </summary>
+        private event EventHandler endedGame;
+        public event EventHandler EndedGame
+        {
+            add
+            {
+                endedGame += value;
+            }
+            remove
+            {
+                endedGame -= value;
+            }
+        }
         #endregion
 
         #region Initialize
@@ -128,6 +168,7 @@ namespace GameCaro
         /// </summary>
         public void DrawChessBoard()
         {
+            ChessBoard.Enabled = true;
             Matrix = new List<List<Button>>();
 
             Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
@@ -172,6 +213,10 @@ namespace GameCaro
 
             ChangePlayer();
 
+            if(playerMarked != null)
+            {
+                playerMarked(this, new EventArgs());
+            }
 
             if (isEndGame(btn))
             {
@@ -180,9 +225,12 @@ namespace GameCaro
 
         }
 
-        private void EndGame()
+        public void EndGame()
         {
-            MessageBox.Show("Kết thúc game !");
+            if(endedGame != null)
+            {
+                endedGame(this, new EventArgs());
+            }
         }
 
         private Point GetChessPoint(Button btn)
