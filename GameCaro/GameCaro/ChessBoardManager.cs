@@ -141,6 +141,23 @@ namespace GameCaro
                 endedGame -= value;
             }
         }
+
+        /// <summary>
+        /// Tạo stack lưu lại tạo độ của quân cờ khi đánh
+        /// </summary>
+        private Stack<PlayInfo> playTimeLine;
+        public Stack<PlayInfo> PlayTimeLine
+        {
+            get
+            {
+                return playTimeLine;
+            }
+
+            set
+            {
+                playTimeLine = value;
+            }
+        }
         #endregion
 
         #region Initialize
@@ -149,16 +166,12 @@ namespace GameCaro
             this.ChessBoard = chessBoard;
             this.PlayerName = playerName;
             this.PlayerMark = mark;
-            
+
             this.Player = new List<Player>()
             {
                 new Player("Player 1", Image.FromFile(Application.StartupPath + "\\Resources\\P1.png")),
                 new Player("Player 2", Image.FromFile(Application.StartupPath + "\\Resources\\P2.png"))
             };
-
-            CurrentPlayer = 0;
-
-            ChangePlayer();
         }
         #endregion
 
@@ -169,6 +182,14 @@ namespace GameCaro
         public void DrawChessBoard()
         {
             ChessBoard.Enabled = true;
+            ChessBoard.Controls.Clear();
+
+            PlayTimeLine = new Stack<PlayInfo>();
+
+            CurrentPlayer = 0;
+
+            ChangePlayer();
+
             Matrix = new List<List<Button>>();
 
             Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
@@ -211,9 +232,13 @@ namespace GameCaro
 
             Mark(btn);
 
+            PlayTimeLine.Push(new PlayInfo(GetChessPoint(btn), CurrentPlayer));
+
+            CurrentPlayer = CurrentPlayer == 1 ? 0 : 1;
+
             ChangePlayer();
 
-            if(playerMarked != null)
+            if (playerMarked != null)
             {
                 playerMarked(this, new EventArgs());
             }
@@ -227,10 +252,34 @@ namespace GameCaro
 
         public void EndGame()
         {
-            if(endedGame != null)
+            if (endedGame != null)
             {
                 endedGame(this, new EventArgs());
             }
+        }
+
+        public bool Undo()
+        {
+            if (PlayTimeLine.Count <= 0)
+                return false;
+            PlayInfo oldPoint = PlayTimeLine.Pop();
+            Button btn = Matrix[oldPoint.Point.Y][oldPoint.Point.X];
+
+            btn.BackgroundImage = null;
+
+            if(PlayTimeLine.Count <= 0)
+            {
+                CurrentPlayer = 0;
+            }
+            else
+            {
+                oldPoint = PlayTimeLine.Peek();
+                CurrentPlayer = oldPoint.CurrentPlayer == 1 ? 0 : 1;
+            }
+            
+            ChangePlayer();
+
+            return true;
         }
 
         private Point GetChessPoint(Button btn)
@@ -420,10 +469,11 @@ namespace GameCaro
         {
             //đổi icon x, o
             btn.BackgroundImage = Player[CurrentPlayer].Mark;
-
-            CurrentPlayer = CurrentPlayer == 1 ? 0 : 1;
         }
 
+        /// <summary>
+        /// Thay lượt người chơi
+        /// </summary>
         private void ChangePlayer()
         {
             //đổi tên người chơi

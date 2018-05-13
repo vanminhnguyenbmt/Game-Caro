@@ -29,14 +29,35 @@ namespace GameCaro
 
             tmCoolDown.Interval = Cons.COOL_DOWN_INTERVAL;
 
-            ChessBoard.DrawChessBoard();
+            NewGame();
         }
 
+        #region Methods
         void EndGame()
         {
             tmCoolDown.Stop();
             pnlChessBoard.Enabled = false;
-            MessageBox.Show("Kết thúc");
+            undoToolStripMenuItem.Enabled = false;
+            MessageBox.Show("End Game");
+        }
+
+        void NewGame()
+        {
+            prcbCoolDown.Value = 0;
+            tmCoolDown.Stop();
+            undoToolStripMenuItem.Enabled = true;
+
+            ChessBoard.DrawChessBoard();
+        }
+
+        void Undo()
+        {
+            ChessBoard.Undo();
+        }
+
+        void Quit()
+        {
+            Application.Exit();
         }
 
         private void ChessBoard_PlayerMarked(object sender, EventArgs e)
@@ -50,6 +71,11 @@ namespace GameCaro
             EndGame();
         }
 
+        /// <summary>
+        /// Sư kiện khi timer chạy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tmCoolDown_Tick(object sender, EventArgs e)
         {
             prcbCoolDown.PerformStep();
@@ -59,5 +85,27 @@ namespace GameCaro
                 EndGame();
             }
         }
+
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewGame();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Undo();
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Quit();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Do you want to exit !!!", "Warning", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
+                e.Cancel = true;
+        }
+        #endregion
     }
 }
