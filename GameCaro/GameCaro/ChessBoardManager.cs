@@ -258,6 +258,10 @@ namespace GameCaro
             }
         }
 
+        /// <summary>
+        /// Đi lại cho quân cờ
+        /// </summary>
+        /// <returns></returns>
         public bool Undo()
         {
             if (PlayTimeLine.Count <= 0)
@@ -282,6 +286,11 @@ namespace GameCaro
             return true;
         }
 
+        /// <summary>
+        /// Lấy vị trí X, Y của button được nhấn trong list Matrix
+        /// </summary>
+        /// <param name="btn"></param>
+        /// <returns></returns>
         private Point GetChessPoint(Button btn)
         {
             int vertical = Convert.ToInt32(btn.Tag);

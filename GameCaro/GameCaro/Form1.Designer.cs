@@ -112,6 +112,7 @@
             this.btnLAN.TabIndex = 4;
             this.btnLAN.Text = "Connect";
             this.btnLAN.UseVisualStyleBackColor = true;
+            this.btnLAN.Click += new System.EventHandler(this.btnLAN_Click);
             // 
             // txtIP
             // 
@@ -207,6 +208,7 @@
             this.Name = "Form1";
             this.Text = "Game Caro LAN";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Shown += new System.EventHandler(this.Form1_Shown);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).EndInit();
             this.panel3.ResumeLayout(false);
