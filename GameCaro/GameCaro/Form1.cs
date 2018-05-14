@@ -22,6 +22,9 @@ namespace GameCaro
         {
             InitializeComponent();
 
+            //Tránh xung đột thay đổi giao diện khi sử dụng Multi thread
+            Control.CheckForIllegalCrossThreadCalls = false;
+
             ChessBoard = new ChessBoardManager(pnlChessBoard, txtPlayerName, pctbMark);
             ChessBoard.EndedGame += ChessBoard_EndedGame;
             ChessBoard.PlayerMarked += ChessBoard_PlayerMarked;
@@ -65,13 +68,17 @@ namespace GameCaro
             Application.Exit();
         }
 
-        private void ChessBoard_PlayerMarked(object sender, EventArgs e)
+        void ChessBoard_PlayerMarked(object sender, ButtonClickEvent e)
         {
             tmCoolDown.Start();
+            pnlChessBoard.Enabled = false;
             prcbCoolDown.Value = 0;
+
+            socket.Send(new SocketData((int)SocketCommand.SEND_POINT, "", e.ClickedPoint));
+            Listen();
         }
 
-        private void ChessBoard_EndedGame(object sender, EventArgs e)
+        void ChessBoard_EndedGame(object sender, EventArgs e)
         {
             EndGame();
         }
@@ -118,34 +125,16 @@ namespace GameCaro
 
             if (!socket.ConnectServer()) //không kết nối tới được server thì tiến hành tạo server
             {
+                socket.isServer = true;
+                pnlChessBoard.Enabled = true;
                 socket.CreateServer();
-
-                // server lắng nghe từ client
-                Thread listenThread = new Thread(() => 
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(500);
-                        try
-                        {
-                            Listen();
-                            break;
-                        }
-                        catch
-                        {
-                            
-                        }
-                    }
-                });
-                listenThread.IsBackground = true;
-                listenThread.Start();
             }
             else
             {
+                socket.isServer = false;
+                pnlChessBoard.Enabled = false;
                 // client lắng nghe tin từ server
                 Listen();
-
-                socket.Send("Thông tin từ Client");
             }
         }
 
@@ -162,12 +151,60 @@ namespace GameCaro
 
         void Listen()
         {
-            Thread listenThread = new Thread(() =>
+            //Tránh bị lỗi khi 1 bên thoát đột ngột
+            try
             {
-                string data = (string)socket.Receive();
-            });
-            listenThread.IsBackground = true;
-            listenThread.Start();
+                Thread listenThread = new Thread(() =>
+                {
+                    SocketData data = (SocketData)socket.Receive();
+
+                    ProcessDate(data);
+                });
+                listenThread.IsBackground = true;
+                listenThread.Start();
+            }
+            catch
+            {
+                
+            }
+        }
+
+        private void ProcessDate(SocketData data)
+        {
+            switch (data.Command)
+            {
+                case (int)SocketCommand.NOTIFY:
+                    MessageBox.Show(data.Message);
+                    break;
+
+                case (int)SocketCommand.NEW_GAME:
+                    break;
+
+                case (int)SocketCommand.SEND_POINT:
+                    //vì timer chạy thread khác với main nên phải đưa vào invoke
+                    this.Invoke((MethodInvoker)(() =>
+                    {
+                        prcbCoolDown.Value = 0;
+                        pnlChessBoard.Enabled = true;
+                        tmCoolDown.Start();
+                        ChessBoard.OtherPlayerMark(data.Point);
+                    }));
+                    break;
+
+                case (int)SocketCommand.UNDO:
+                    break;
+
+                case (int)SocketCommand.END_GAME:
+                    break;
+
+                case (int)SocketCommand.QUIT:
+                    break;
+
+                default:
+                    break;
+            }
+
+            Listen();
         }
 
         #endregion

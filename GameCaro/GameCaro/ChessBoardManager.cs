@@ -113,8 +113,8 @@ namespace GameCaro
         /// <summary>
         /// Event khi người chơi đánh 1 ô cờ
         /// </summary>
-        private event EventHandler playerMarked;
-        public event EventHandler PlayerMarked
+        private event EventHandler<ButtonClickEvent> playerMarked;
+        public event EventHandler<ButtonClickEvent> PlayerMarked
         {
             add
             {
@@ -240,14 +240,38 @@ namespace GameCaro
 
             if (playerMarked != null)
             {
-                playerMarked(this, new EventArgs());
+                playerMarked(this, new ButtonClickEvent(GetChessPoint(btn)));
             }
 
             if (isEndGame(btn))
             {
                 EndGame();
             }
+        }
 
+        /// <summary>
+        /// Xử lý khi người chơi khác đánh
+        /// </summary>
+        /// <param name="point"></param>
+        public void OtherPlayerMark(Point point)
+        {
+            Button btn = Matrix[point.Y][point.X];
+
+            if (btn.BackgroundImage != null)
+                return;
+
+            Mark(btn);
+
+            PlayTimeLine.Push(new PlayInfo(GetChessPoint(btn), CurrentPlayer));
+
+            CurrentPlayer = CurrentPlayer == 1 ? 0 : 1;
+
+            ChangePlayer();
+
+            if (isEndGame(btn))
+            {
+                EndGame();
+            }
         }
 
         public void EndGame()
@@ -491,5 +515,31 @@ namespace GameCaro
             PlayerMark.Image = Player[CurrentPlayer].Mark;
         }
         #endregion
+    }
+
+    /// <summary>
+    /// Tạo class Event để lưu lại tọa độ button được click
+    /// </summary>
+    public class ButtonClickEvent: EventArgs
+    {
+        private Point clickedPoint;
+
+        public Point ClickedPoint
+        {
+            get
+            {
+                return clickedPoint;
+            }
+
+            set
+            {
+                clickedPoint = value;
+            }
+        }
+
+        public ButtonClickEvent(Point point)
+        {
+            this.ClickedPoint = point;
+        }
     }
 }
