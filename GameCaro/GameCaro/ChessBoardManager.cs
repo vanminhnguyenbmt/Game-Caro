@@ -536,6 +536,496 @@ namespace GameCaro
             PlayerMark.Image = Player[CurrentPlayer].Mark;
         }
         #endregion
+
+        #region AI
+
+        /// <summary>
+        /// Mảng lưu lại điểm tấn công và phòng thủ để đưa ra nước đi tiếp theo tốt nhất
+        /// </summary>
+        private long[] ArrayPointAttack = new long[7] { 0, 3, 24, 192, 1536, 12288, 98304 };
+        private long[] ArrayPointDefend = new long[7] { 0, 1, 9, 81, 729, 6561, 59049 };
+
+        /// <summary>
+        /// Khởi động điểm đi tiếp theo cho AI
+        /// </summary>
+        public void StartComputer()
+        {
+            if(PlayTimeLine.Count == 0)
+            {
+                OtherPlayerMark(new Point(Cons.CHESS_BOARD_WIDTH / 2, Cons.CHESS_BOARD_HEIGHT / 2));
+            }
+            else
+            {
+                Point point = FindChess();
+                OtherPlayerMark(point);
+            }
+        }
+
+        /// <summary>
+        /// Hàm tìm kiếm nước đi tiếp theo cho ô AI
+        /// </summary>
+        /// <returns></returns>
+        private Point FindChess()
+        {
+            Point point = new Point();
+            long MaxPoint = 0;
+            
+            for(int i = 0; i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                for(int j = 0; j < Cons.CHESS_BOARD_WIDTH; j++)
+                {
+                    if(Matrix[i][j].BackgroundImage == Player[0].Mark)
+                    {
+                        long AttackPoint = PointAttackVertical(i, j) + PointAttackHorizontal(i, j) + PointAttackSubDiagonal(i, j) + PointAttackPrimaryDiagonal(i, j);
+                        long DefendPoint = PointDefendVertical(i, j) + PointDefendHorizontal(i, j) + PointDefendSubDiagonal(i, j) + PointDefendPrimaryDiagonal(i, j);
+                        long TempPoint = AttackPoint > DefendPoint ? AttackPoint : DefendPoint;
+                        if(MaxPoint < TempPoint)
+                        {
+                            MaxPoint = TempPoint;
+                            point = new Point(i, j);
+                        }
+                    }
+                }
+            }
+            return point;
+        }
+
+
+        #region Điểm tấn công
+        /// <summary>
+        /// Tính điểm theo chiều dọc của bàn cờ
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointAttackVertical(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for(int i = 1; i < 7 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentRow - i >= 0; i++)
+            {
+                if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessPlayer == 2)
+                return 0;
+
+            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint += ArrayPointAttack[ChessComputer];
+            return TotalPoint;
+        }
+
+        /// <summary>
+        /// Tính điểm theo chiều ngang của bàn cờ
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointAttackHorizontal(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH; i++)
+            {
+                if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentCol - i >= 0; i++)
+            {
+                if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessPlayer == 2)
+                return 0;
+
+            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint += ArrayPointAttack[ChessComputer];
+            return TotalPoint;
+        }
+
+        /// <summary>
+        /// Tính điểm theo đường chéo phụ
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointAttackSubDiagonal(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow - i >= 0; i++)
+            {
+                if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessPlayer == 2)
+                return 0;
+
+            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint += ArrayPointAttack[ChessComputer];
+            return TotalPoint;
+        }
+
+        /// <summary>
+        /// Tính điểm theo đường chéo chính
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointAttackPrimaryDiagonal(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow - i >= 0; i++)
+            {
+                if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                }
+                else if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessPlayer == 2)
+                return 0;
+
+            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint += ArrayPointAttack[ChessComputer];
+            return TotalPoint;
+        }
+        #endregion
+
+        #region Điểm phòng ngự
+
+        /// <summary>
+        /// Tính điểm theo chiều dọc của bàn cờ
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointDefendVertical(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentRow - i >= 0; i++)
+            {
+                if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessComputer == 2)
+                return 0;
+
+            TotalPoint += ArrayPointDefend[ChessPlayer];
+            return TotalPoint;
+        }
+
+        /// <summary>
+        /// Tính điểm theo chiều ngang của bàn cờ
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointDefendHorizontal(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH; i++)
+            {
+                if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentCol - i >= 0; i++)
+            {
+                if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessComputer == 2)
+                return 0;
+
+            TotalPoint += ArrayPointDefend[ChessPlayer];
+            return TotalPoint;
+        }
+
+        /// <summary>
+        /// Tính điểm theo đường chéo phụ
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointDefendSubDiagonal(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow - i >= 0; i++)
+            {
+                if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessComputer == 2)
+                return 0;
+            
+            TotalPoint += ArrayPointDefend[ChessPlayer];
+            return TotalPoint;
+        }
+
+        /// <summary>
+        /// Tính điểm theo đường chéo chính
+        /// </summary>
+        /// <param name="currentRow">Vị trí dòng hiện tại của ô cờ được đánh</param>
+        /// <param name="currentCol">Vị trí cột hiện tại của ô cờ được đánh</param>
+        /// <returns></returns>
+        private long PointDefendPrimaryDiagonal(int currentRow, int currentCol)
+        {
+            long TotalPoint = 0;
+            int ChessPlayer = 0;
+            int ChessComputer = 0;
+
+            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {
+                if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow - i >= 0; i++)
+            {
+                if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[0].Mark)
+                {
+                    ChessComputer++;
+                    break;
+                }
+                else if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[1].Mark)
+                {
+                    ChessPlayer++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (ChessComputer == 2)
+                return 0;
+
+            TotalPoint += ArrayPointDefend[ChessPlayer];
+            return TotalPoint;
+        }
+
+        #endregion
+
+        #endregion
     }
 
     /// <summary>

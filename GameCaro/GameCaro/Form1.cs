@@ -17,6 +17,7 @@ namespace GameCaro
         #region Properties
         ChessBoardManager ChessBoard;
         SocketManager socket;
+        Boolean isLanGame;
         #endregion
         public Form1()
         {
@@ -24,6 +25,8 @@ namespace GameCaro
 
             //Tránh xung đột thay đổi giao diện khi sử dụng Multi thread
             Control.CheckForIllegalCrossThreadCalls = false;
+
+            isLanGame = false;
 
             ChessBoard = new ChessBoardManager(pnlChessBoard, txtPlayerName, pctbMark);
             ChessBoard.EndedGame += ChessBoard_EndedGame;
@@ -36,7 +39,6 @@ namespace GameCaro
             tmCoolDown.Interval = Cons.COOL_DOWN_INTERVAL;
 
             socket = new SocketManager();
-
             NewGame();
         }
 
@@ -55,6 +57,8 @@ namespace GameCaro
             tmCoolDown.Stop();
             undoToolStripMenuItem.Enabled = true;
 
+            EnableElement(false);
+
             ChessBoard.DrawChessBoard();
         }
 
@@ -71,19 +75,31 @@ namespace GameCaro
         void ChessBoard_PlayerMarked(object sender, ButtonClickEvent e)
         {
             tmCoolDown.Start();
-            pnlChessBoard.Enabled = false;
+            
             prcbCoolDown.Value = 0;
+        
+            if (isLanGame)
+            {
+                pnlChessBoard.Enabled = false;
+                undoToolStripMenuItem.Enabled = false;
+                socket.Send(new SocketData((int)SocketCommand.SEND_POINT, "", e.ClickedPoint));
 
-            socket.Send(new SocketData((int)SocketCommand.SEND_POINT, "", e.ClickedPoint));
-            undoToolStripMenuItem.Enabled = false;
-            Listen();
+                Listen();
+            }else
+            {
+                ChessBoard.StartComputer();
+            }
+            
         }
 
         void ChessBoard_EndedGame(object sender, EventArgs e)
         {
             EndGame();
 
-            socket.Send(new SocketData((int)SocketCommand.END_GAME, "", new Point()));
+            if(isLanGame)
+            {
+                socket.Send(new SocketData((int)SocketCommand.END_GAME, "", new Point()));
+            }
         }
 
         /// <summary>
@@ -98,26 +114,39 @@ namespace GameCaro
             if(prcbCoolDown.Value >= prcbCoolDown.Maximum)
             {
                 EndGame();
-                socket.Send(new SocketData((int)SocketCommand.TIME_OUT, "", new Point()));
+                if(isLanGame)
+                {
+                    socket.Send(new SocketData((int)SocketCommand.TIME_OUT, "", new Point()));
+                }           
             }
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NewGame();
-            socket.Send(new SocketData((int)SocketCommand.NEW_GAME, "", new Point()));
+            if(isLanGame)
+            {
+                socket.Send(new SocketData((int)SocketCommand.NEW_GAME, "", new Point()));
+            }      
             pnlChessBoard.Enabled = true;
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Undo();
-            socket.Send(new SocketData((int)SocketCommand.UNDO, "", new Point()));
+            if(isLanGame)
+            {
+                socket.Send(new SocketData((int)SocketCommand.UNDO, "", new Point()));
+            }            
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Quit();
+            if(isLanGame)
+            {
+                socket.Send(new SocketData((int)SocketCommand.QUIT, "", new Point()));
+            }           
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -166,6 +195,25 @@ namespace GameCaro
                 txtIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Ethernet);
             }
             //txtIP.Text = socket.GetLocalIPAddress();
+        }
+
+        private void EnableElement(Boolean check)
+        {
+            isLanGame = check;
+            txtIP.Enabled = check;
+            btnLAN.Enabled = check;
+        }
+
+        private void playersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnableElement(true);
+        }
+
+        private void playerVsComputerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EnableElement(false);
+
+            ChessBoard.StartComputer();
         }
 
         void Listen()
