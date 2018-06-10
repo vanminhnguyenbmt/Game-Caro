@@ -87,7 +87,10 @@ namespace GameCaro
                 Listen();
             }else
             {
-                ChessBoard.StartComputer();
+                if(ChessBoard.CurrentPlayer == 0)
+                {
+                    ChessBoard.StartComputer();
+                }            
             }
             
         }

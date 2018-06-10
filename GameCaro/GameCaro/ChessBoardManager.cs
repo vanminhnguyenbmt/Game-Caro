@@ -542,8 +542,16 @@ namespace GameCaro
         /// <summary>
         /// Mảng lưu lại điểm tấn công và phòng thủ để đưa ra nước đi tiếp theo tốt nhất
         /// </summary>
-        private long[] ArrayPointAttack = new long[7] { 0, 3, 24, 192, 1536, 12288, 98304 };
-        private long[] ArrayPointDefend = new long[7] { 0, 1, 9, 81, 729, 6561, 59049 };
+
+        //Để đánh giá nước đi tốt hay không, cần 2 mảng điểm tấn công và phòng thủ
+        //private long[] ArrayPointAttack = new long[7] { 0, 3, 24, 192, 1536, 12288, 98304 };
+        //private long[] ArrayPointDefend = new long[7] { 0, 1, 9, 81, 729, 6561, 59049 };
+
+        //private long[] ArrayPointAttack = new long[7] { 0, 9, 54, 162, 1458, 13112, 118008 };
+        //private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 99, 729, 6561, 59049 };
+
+        private long[] ArrayPointAttack = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
+        private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
 
         /// <summary>
         /// Khởi động điểm đi tiếp theo cho AI
@@ -561,6 +569,7 @@ namespace GameCaro
             }
         }
 
+
         /// <summary>
         /// Hàm tìm kiếm nước đi tiếp theo cho ô AI
         /// </summary>
@@ -574,17 +583,19 @@ namespace GameCaro
             {
                 for(int j = 0; j < Cons.CHESS_BOARD_WIDTH; j++)
                 {
-                    if(Matrix[i][j].BackgroundImage == Player[0].Mark)
+                    //chỉ duyệt những ô chưa đánh
+                    if(Matrix[i][j].BackgroundImage == null)
                     {
                         long AttackPoint = PointAttackVertical(i, j) + PointAttackHorizontal(i, j) + PointAttackSubDiagonal(i, j) + PointAttackPrimaryDiagonal(i, j);
                         long DefendPoint = PointDefendVertical(i, j) + PointDefendHorizontal(i, j) + PointDefendSubDiagonal(i, j) + PointDefendPrimaryDiagonal(i, j);
+                        //lấy điểm tạm bằng cách so sánh điểm tấn công và phòng thủ
                         long TempPoint = AttackPoint > DefendPoint ? AttackPoint : DefendPoint;
-                        if(MaxPoint < TempPoint)
+                        if (MaxPoint < TempPoint)
                         {
                             MaxPoint = TempPoint;
-                            point = new Point(i, j);
+                            point = new Point(j, i);
                         }
-                    }
+                    }                                     
                 }
             }
             return point;
@@ -601,27 +612,34 @@ namespace GameCaro
         private long PointAttackVertical(int currentRow, int currentCol)
         {
             long TotalPoint = 0;
-            int ChessPlayer = 0;
-            int ChessComputer = 0;
+            long TempPoint = 0;
+            int ChessPlayer = 0; //số quân cờ của người
+            int ChessComputer = 0; //số quân cờ của máy
 
-            for(int i = 1; i < 7 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
-            {
+            //duyệt từ dòng trên xuống dưới
+            //duyệt 5 con để biết ô tiếp theo(thứ 6) bị chặn thì ta xử lý phù hợp
+            for (int i = 1; i < 6 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            {   
+                //Ô cờ của máy
                 if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[0].Mark)
                 {
                     ChessComputer++;
                 }
+                //Ô cờ của người chơi
                 else if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[1].Mark)
                 {
                     ChessPlayer++;
-                    break;
+                    TempPoint -= 9;
+                    break; //nếu gặp quân địch (bị chặn) => thoát vòng lặp
                 }
-                else
+                else //nếu gặp ô trống => thoát
                 {
                     break;
                 }
             }
 
-            for (int i = 1; i < 7 && currentRow - i >= 0; i++)
+            //duyệt từ dưới ngược lên trên
+            for (int i = 1; i < 6 && currentRow - i >= 0; i++)
             {
                 if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[0].Mark)
                 {
@@ -629,20 +647,25 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
-                    break;
+                    break; //nếu gặp quân địch (bị chặn) => thoát vòng lặp 
                 }
-                else
+                else //nếu gặp ô trống => thoát
                 {
                     break;
                 }
             }
 
+            //nếu bị chặn 2 đầu thì nước đang xét không còn giá trị nữa
             if (ChessPlayer == 2)
                 return 0;
 
-            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            //giảm tổng điểm dựa trên số quân của người đánh
+            TotalPoint -= ArrayPointDefend[ChessPlayer];
             TotalPoint += ArrayPointAttack[ChessComputer];
+            TotalPoint += TempPoint;
+
             return TotalPoint;
         }
 
@@ -655,10 +678,11 @@ namespace GameCaro
         private long PointAttackHorizontal(int currentRow, int currentCol)
         {
             long TotalPoint = 0;
+            long TempPoint = 0;
             int ChessPlayer = 0;
             int ChessComputer = 0;
 
-            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH; i++)
+            for (int i = 1; i < 6 && currentCol + i < Cons.CHESS_BOARD_WIDTH; i++)
             {
                 if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[0].Mark)
                 {
@@ -666,6 +690,7 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
                     break;
                 }
@@ -675,7 +700,7 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentCol - i >= 0; i++)
+            for (int i = 1; i < 6 && currentCol - i >= 0; i++)
             {
                 if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[0].Mark)
                 {
@@ -683,6 +708,7 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
                     break;
                 }
@@ -695,8 +721,10 @@ namespace GameCaro
             if (ChessPlayer == 2)
                 return 0;
 
-            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint -= ArrayPointDefend[ChessPlayer];
             TotalPoint += ArrayPointAttack[ChessComputer];
+            TotalPoint += TempPoint;
+
             return TotalPoint;
         }
 
@@ -709,10 +737,11 @@ namespace GameCaro
         private long PointAttackSubDiagonal(int currentRow, int currentCol)
         {
             long TotalPoint = 0;
+            long TempPoint = 0;
             int ChessPlayer = 0;
             int ChessComputer = 0;
 
-            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow - i >= 0; i++)
+            for (int i = 1; i < 6 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow - i >= 0; i++)
             {
                 if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[0].Mark)
                 {
@@ -720,6 +749,7 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
                     break;
                 }
@@ -729,7 +759,7 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            for (int i = 1; i < 6 && currentCol - i >= 0 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
                 if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[0].Mark)
                 {
@@ -737,6 +767,7 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
                     break;
                 }
@@ -749,8 +780,10 @@ namespace GameCaro
             if (ChessPlayer == 2)
                 return 0;
 
-            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint -= ArrayPointDefend[ChessPlayer];
             TotalPoint += ArrayPointAttack[ChessComputer];
+            TotalPoint += TempPoint;
+
             return TotalPoint;
         }
 
@@ -763,10 +796,11 @@ namespace GameCaro
         private long PointAttackPrimaryDiagonal(int currentRow, int currentCol)
         {
             long TotalPoint = 0;
+            long TempPoint = 0;
             int ChessPlayer = 0;
             int ChessComputer = 0;
 
-            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            for (int i = 1; i < 6 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
                 if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[0].Mark)
                 {
@@ -774,6 +808,7 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
                     break;
                 }
@@ -783,7 +818,7 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow - i >= 0; i++)
+            for (int i = 1; i < 6 && currentCol - i >= 0 && currentRow - i >= 0; i++)
             {
                 if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[0].Mark)
                 {
@@ -791,6 +826,7 @@ namespace GameCaro
                 }
                 else if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[1].Mark)
                 {
+                    TempPoint -= 9;
                     ChessPlayer++;
                     break;
                 }
@@ -803,8 +839,10 @@ namespace GameCaro
             if (ChessPlayer == 2)
                 return 0;
 
-            TotalPoint -= ArrayPointDefend[ChessPlayer + 1];
+            TotalPoint -= ArrayPointDefend[ChessPlayer];
             TotalPoint += ArrayPointAttack[ChessComputer];
+            TotalPoint += TempPoint;
+
             return TotalPoint;
         }
         #endregion
@@ -820,10 +858,11 @@ namespace GameCaro
         private long PointDefendVertical(int currentRow, int currentCol)
         {
             long TotalPoint = 0;
-            int ChessPlayer = 0;
-            int ChessComputer = 0;
+            int ChessPlayer = 0; //số quân cờ của người
+            int ChessComputer = 0; //số quân cờ của máy
 
-            for (int i = 1; i < 7 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            //duyệt từ dòng trên xuống dưới
+            for (int i = 1; i < 6 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
                 if (Matrix[currentRow + i][currentCol].BackgroundImage == Player[0].Mark)
                 {
@@ -840,7 +879,8 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentRow - i >= 0; i++)
+            //duyệt từ dưới ngược lên trên
+            for (int i = 1; i < 6 && currentRow - i >= 0; i++)
             {
                 if (Matrix[currentRow - i][currentCol].BackgroundImage == Player[0].Mark)
                 {
@@ -851,16 +891,22 @@ namespace GameCaro
                 {
                     ChessPlayer++;
                 }
-                else
+                else // nếu gặp ô trống => thoát
                 {
                     break;
                 }
             }
 
+            //máy đã chặn 2 đầu nên không xét nữa
             if (ChessComputer == 2)
                 return 0;
 
             TotalPoint += ArrayPointDefend[ChessPlayer];
+            if(ChessPlayer > 0)
+            {
+                TotalPoint -= ArrayPointAttack[ChessComputer] * 2;
+            }
+
             return TotalPoint;
         }
 
@@ -876,7 +922,7 @@ namespace GameCaro
             int ChessPlayer = 0;
             int ChessComputer = 0;
 
-            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH; i++)
+            for (int i = 1; i < 6 && currentCol + i < Cons.CHESS_BOARD_WIDTH; i++)
             {
                 if (Matrix[currentRow][currentCol + i].BackgroundImage == Player[0].Mark)
                 {
@@ -893,7 +939,7 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentCol - i >= 0; i++)
+            for (int i = 1; i < 6 && currentCol - i >= 0; i++)
             {
                 if (Matrix[currentRow][currentCol - i].BackgroundImage == Player[0].Mark)
                 {
@@ -914,6 +960,11 @@ namespace GameCaro
                 return 0;
 
             TotalPoint += ArrayPointDefend[ChessPlayer];
+            if (ChessPlayer > 0)
+            {
+                TotalPoint -= ArrayPointAttack[ChessComputer] * 2;
+            }
+
             return TotalPoint;
         }
 
@@ -929,7 +980,7 @@ namespace GameCaro
             int ChessPlayer = 0;
             int ChessComputer = 0;
 
-            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow - i >= 0; i++)
+            for (int i = 1; i < 6 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow - i >= 0; i++)
             {
                 if (Matrix[currentRow - i][currentCol + i].BackgroundImage == Player[0].Mark)
                 {
@@ -946,7 +997,7 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            for (int i = 1; i < 6 && currentCol - i >= 0 && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
                 if (Matrix[currentRow + i][currentCol - i].BackgroundImage == Player[0].Mark)
                 {
@@ -965,8 +1016,13 @@ namespace GameCaro
 
             if (ChessComputer == 2)
                 return 0;
-            
+
             TotalPoint += ArrayPointDefend[ChessPlayer];
+            if(ChessPlayer > 0)
+            {
+                TotalPoint -= ArrayPointAttack[ChessComputer] * 2;
+            }
+
             return TotalPoint;
         }
 
@@ -982,7 +1038,7 @@ namespace GameCaro
             int ChessPlayer = 0;
             int ChessComputer = 0;
 
-            for (int i = 1; i < 7 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
+            for (int i = 1; i < 6 && currentCol + i < Cons.CHESS_BOARD_WIDTH && currentRow + i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
                 if (Matrix[currentRow + i][currentCol + i].BackgroundImage == Player[0].Mark)
                 {
@@ -999,7 +1055,7 @@ namespace GameCaro
                 }
             }
 
-            for (int i = 1; i < 7 && currentCol - i >= 0 && currentRow - i >= 0; i++)
+            for (int i = 1; i < 6 && currentCol - i >= 0 && currentRow - i >= 0; i++)
             {
                 if (Matrix[currentRow - i][currentCol - i].BackgroundImage == Player[0].Mark)
                 {
@@ -1020,6 +1076,11 @@ namespace GameCaro
                 return 0;
 
             TotalPoint += ArrayPointDefend[ChessPlayer];
+            if (ChessPlayer > 0)
+            {
+                TotalPoint -= ArrayPointAttack[ChessComputer] * 2;
+            }
+
             return TotalPoint;
         }
 

@@ -60,7 +60,7 @@
             // 
             this.pnlChessBoard.Location = new System.Drawing.Point(12, 36);
             this.pnlChessBoard.Name = "pnlChessBoard";
-            this.pnlChessBoard.Size = new System.Drawing.Size(696, 479);
+            this.pnlChessBoard.Size = new System.Drawing.Size(696, 495);
             this.pnlChessBoard.TabIndex = 0;
             // 
             // panel2
@@ -94,7 +94,7 @@
             this.panel3.Controls.Add(this.txtPlayerName);
             this.panel3.Location = new System.Drawing.Point(713, 292);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(250, 223);
+            this.panel3.Size = new System.Drawing.Size(250, 239);
             this.panel3.TabIndex = 2;
             // 
             // label1
@@ -109,6 +109,7 @@
             // 
             // btnLAN
             // 
+            this.btnLAN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLAN.Location = new System.Drawing.Point(4, 87);
             this.btnLAN.Name = "btnLAN";
             this.btnLAN.Size = new System.Drawing.Size(134, 23);
