@@ -43,11 +43,24 @@ namespace GameCaro
         }
 
         #region Methods
+
         void EndGame()
         {
             tmCoolDown.Stop();
             pnlChessBoard.Enabled = false;
             undoToolStripMenuItem.Enabled = false;
+            if(!isLanGame)
+            {
+                if (ChessBoard.NumberPlayerWin == 0)
+                {
+                    MessageBox.Show("Computer thắng");
+                }
+                else if(ChessBoard.NumberPlayerWin == 1)
+                {
+                    MessageBox.Show("Bạn đã thắng");
+                }
+                    
+            }           
             //MessageBox.Show("End Game");
         }
 
@@ -170,8 +183,20 @@ namespace GameCaro
             }
         }
 
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            txtIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Wireless80211);
+
+            if (string.IsNullOrEmpty(txtIP.Text))
+            {
+                txtIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Ethernet);
+            }
+            //txtIP.Text = socket.GetLocalIPAddress();
+        }
+
         private void btnLAN_Click(object sender, EventArgs e)
         {
+            btnLAN.Enabled = false;
             socket.IP = txtIP.Text;
 
             if (!socket.ConnectServer()) //không kết nối tới được server thì tiến hành tạo server
@@ -189,22 +214,13 @@ namespace GameCaro
             }
         }
 
-        private void Form1_Shown(object sender, EventArgs e)
-        {
-            txtIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Wireless80211);
-
-            if (string.IsNullOrEmpty(txtIP.Text))
-            {
-                txtIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Ethernet);
-            }
-            //txtIP.Text = socket.GetLocalIPAddress();
-        }
-
         private void EnableElement(Boolean check)
         {
             isLanGame = check;
             txtIP.Enabled = check;
             btnLAN.Enabled = check;
+            txtIP.Visible = check;
+            btnLAN.Visible = check;
         }
 
         private void playersToolStripMenuItem_Click(object sender, EventArgs e)
@@ -276,7 +292,14 @@ namespace GameCaro
                     break;
 
                 case (int)SocketCommand.END_GAME:
-                    MessageBox.Show("Kết thúc trò chơi");
+                    if(ChessBoard.NumberPlayerWin == 0)
+                    {
+                        MessageBox.Show("Người chơi 1 thắng");
+                    }
+                    else if (ChessBoard.NumberPlayerWin == 1)
+                    {
+                        MessageBox.Show("Người chơi 2 thắng");
+                    }
                     break;
 
                 case (int)SocketCommand.TIME_OUT:
@@ -296,5 +319,98 @@ namespace GameCaro
         }
 
         #endregion
+
+        #region DesignForm
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void btnMini_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        // Move form
+        bool IsDown = false;
+        Point FirstPosition;
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            IsDown = true;
+            FirstPosition = new Point(e.X, e.Y);
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (IsDown == true)
+            {
+                Point p = new Point();
+                p.X = this.Location.X + (e.X - FirstPosition.X);
+                p.Y = this.Location.Y + (e.Y - FirstPosition.Y);
+                this.Location = p;
+            }
+        }
+
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        {
+            IsDown = false;
+        }
+
+        string s = "5 items in a line to win";
+        string[] l;
+        int i = 0, j = 0;
+        private void tmAnimationLabel_Tick(object sender, EventArgs e)
+        {
+            //adding the characters one by one to the label2
+            if(i < s.Length - 1)
+            {
+                label2.Text += l[i].ToString();
+            }
+            //starting the third label after 3 charaters of label2 adding
+            if (i >= 3 && i <= 27)
+            {
+                if (i <= s.Length + 2)
+                    label3.Text += l[j].ToString();
+                j++;
+            }
+            if (j <= s.Length)
+                i++;
+            else
+            {
+                i = j = 0;
+                label3.Text = label2.Text = "";
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            SetupAnimationLabel();
+        }
+
+        private void SetupAnimationLabel()
+        {
+            label1.Text = s;
+            // converting to string to string array
+            l = new string[s.Length];
+            for (int i = 0; i < s.Length; i++)
+            {
+                l[i] = s[i].ToString();
+            }
+            //setting up the 3 label's Location and font properties into same
+            label1.Location = label2.Location = label3.Location = new Point(3, 171);
+            label1.Font = label2.Font = label3.Font = new System.Drawing.Font("Elephant",
+                14.25F,
+                System.Drawing.FontStyle.Bold,
+                System.Drawing.GraphicsUnit.Point,
+                ((byte)(0)));
+            //giving different color to the middile label(label2)
+            this.label1.ForeColor = this.label3.ForeColor = Color.White;
+            this.label2.ForeColor = System.Drawing.Color.Blue;
+            label2.Text = label3.Text = "";
+
+            tmAnimationLabel.Start();
+        }
+        #endregion
+
     }
 }

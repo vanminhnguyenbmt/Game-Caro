@@ -158,6 +158,24 @@ namespace GameCaro
                 playTimeLine = value;
             }
         }
+
+        /// <summary>
+        /// Lưu lại người chơi đạt được 5 ô cờ trước
+        /// </summary>
+        private int numberPlayerWin;
+        public int NumberPlayerWin
+        {
+            get
+            {
+                return numberPlayerWin;
+            }
+
+            set
+            {
+                numberPlayerWin = value;
+            }
+        }     
+
         #endregion
 
         #region Initialize
@@ -201,6 +219,8 @@ namespace GameCaro
                 {
                     Button btn = new Button()
                     {
+                        FlatStyle = FlatStyle.Popup,
+                        BackColor = Color.Transparent,
                         Width = Cons.CHESS_WIDTH,
                         Height = Cons.CHESS_HEIGHT,
                         Location = new Point(oldButton.Location.X + oldButton.Width, oldButton.Location.Y),
@@ -245,6 +265,14 @@ namespace GameCaro
 
             if (isEndGame(btn))
             {
+                if(btn.BackgroundImage == Player[0].Mark)
+                {
+                    NumberPlayerWin = 0;
+                }
+                else if (btn.BackgroundImage == Player[1].Mark)
+                {
+                    NumberPlayerWin = 1;
+                }
                 EndGame();
             }
         }
@@ -270,6 +298,14 @@ namespace GameCaro
 
             if (isEndGame(btn))
             {
+                if (btn.BackgroundImage == Player[0].Mark)
+                {
+                    NumberPlayerWin = 0;
+                }
+                else if (btn.BackgroundImage == Player[1].Mark)
+                {
+                    NumberPlayerWin = 1;
+                }
                 EndGame();
             }
         }
@@ -346,6 +382,8 @@ namespace GameCaro
             return point;
         }
 
+
+        #region Kiểm tra thắng thua
         private bool isEndGame(Button btn)
         {
             return isEndHorizontal(btn) || isEndVertical(btn) || isEndPrimaryDiagonal(btn) || isEndSubDiagonal(btn);
@@ -387,7 +425,7 @@ namespace GameCaro
                 }
             }
 
-            return countLeft + countRight == 5;
+            return countLeft + countRight >= 5;
         }
 
         /// <summary>
@@ -426,7 +464,7 @@ namespace GameCaro
                 }
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom >= 5;
         }
 
         /// <summary>
@@ -471,7 +509,7 @@ namespace GameCaro
                 }
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom >= 5;
         }
 
         /// <summary>
@@ -484,7 +522,7 @@ namespace GameCaro
             Point point = GetChessPoint(btn);
 
             int countTop = 0;
-            for (int i = 0; i <= point.X; i++)
+            for (int i = 0; i <= point.Y; i++)
             {
                 if ((point.X + i) > Cons.CHESS_BOARD_WIDTH || (point.Y - i) < 0)
                     break;
@@ -516,8 +554,9 @@ namespace GameCaro
                 }
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom >= 5;
         }
+        #endregion
 
         private void Mark(Button btn)
         {
@@ -550,8 +589,13 @@ namespace GameCaro
         //private long[] ArrayPointAttack = new long[7] { 0, 9, 54, 162, 1458, 13112, 118008 };
         //private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 99, 729, 6561, 59049 };
 
-        private long[] ArrayPointAttack = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
-        private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
+        //Mảng điểm ưu tiên tấn công
+        //private long[] ArrayPointAttack = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
+        //private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
+
+        //Mảng điểm ưu tiên phòng ngự
+        private long[] ArrayPointDefend = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
+        private long[] ArrayPointAttack = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
 
         /// <summary>
         /// Khởi động điểm đi tiếp theo cho AI

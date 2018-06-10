@@ -105,6 +105,12 @@
   <ItemGroup>
     <Content Include="caro.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VistaButton\VistaButton.csproj">
+      <Project>{8FB8F7EC-5DF8-46F5-9AD5-902B9F5BD38E}</Project>
+      <Name>VistaButton</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
