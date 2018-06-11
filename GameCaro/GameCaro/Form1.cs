@@ -70,7 +70,7 @@ namespace GameCaro
             tmCoolDown.Stop();
             undoToolStripMenuItem.Enabled = true;
 
-            EnableElement(false);
+            //EnableElement(false);
 
             ChessBoard.DrawChessBoard();
         }
@@ -197,6 +197,7 @@ namespace GameCaro
         private void btnLAN_Click(object sender, EventArgs e)
         {
             btnLAN.Enabled = false;
+            isLanGame = true;
             socket.IP = txtIP.Text;
 
             if (!socket.ConnectServer()) //không kết nối tới được server thì tiến hành tạo server
@@ -292,7 +293,7 @@ namespace GameCaro
                     break;
 
                 case (int)SocketCommand.END_GAME:
-                    if(ChessBoard.NumberPlayerWin == 0)
+                    if (ChessBoard.NumberPlayerWin == 0)
                     {
                         MessageBox.Show("Người chơi 1 thắng");
                     }
@@ -300,6 +301,7 @@ namespace GameCaro
                     {
                         MessageBox.Show("Người chơi 2 thắng");
                     }
+                    //MessageBox.Show(ChessBoard.NumberPlayerWin.ToString());
                     break;
 
                 case (int)SocketCommand.TIME_OUT:
