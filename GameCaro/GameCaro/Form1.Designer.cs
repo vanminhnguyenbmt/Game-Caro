@@ -35,13 +35,13 @@
             this.pctbAvatar = new System.Windows.Forms.PictureBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnLAN = new VistaButtonTest.VistaButton();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.pctbMark = new System.Windows.Forms.PictureBox();
             this.txtPlayerName = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.prcbCoolDown = new System.Windows.Forms.ProgressBar();
             this.txtIP = new System.Windows.Forms.TextBox();
-            this.btnLAN = new VistaButtonTest.VistaButton();
-            this.label1 = new System.Windows.Forms.Label();
             this.tmCoolDown = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,10 +51,13 @@
             this.gameModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playerVsComputerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeLaguageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiViet = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmiAnh = new System.Windows.Forms.ToolStripMenuItem();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnMini = new System.Windows.Forms.Button();
-            this.labelLogo = new System.Windows.Forms.Label();
             this.tmAnimationLabel = new System.Windows.Forms.Timer(this.components);
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbAvatar)).BeginInit();
             this.panel3.SuspendLayout();
@@ -93,13 +96,13 @@
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.btnLAN);
+            this.panel3.Controls.Add(this.label2);
+            this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.pctbMark);
             this.panel3.Controls.Add(this.txtPlayerName);
-            this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.prcbCoolDown);
             this.panel3.Controls.Add(this.txtIP);
-            this.panel3.Controls.Add(this.btnLAN);
-            this.panel3.Controls.Add(this.label1);
             this.panel3.Location = new System.Drawing.Point(714, 330);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(250, 239);
@@ -109,11 +112,41 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Elephant", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(3, 196);
+            this.label3.Location = new System.Drawing.Point(3, 198);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(245, 25);
             this.label3.TabIndex = 8;
             this.label3.Text = "5 items in a line to win";
+            // 
+            // btnLAN
+            // 
+            this.btnLAN.BackColor = System.Drawing.Color.Transparent;
+            this.btnLAN.ButtonText = "Connect";
+            this.btnLAN.Location = new System.Drawing.Point(4, 100);
+            this.btnLAN.Name = "btnLAN";
+            this.btnLAN.Size = new System.Drawing.Size(134, 32);
+            this.btnLAN.TabIndex = 9;
+            this.btnLAN.Click += new System.EventHandler(this.btnLAN_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Elephant", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(3, 173);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(245, 25);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "5 items in a line to win";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Elephant", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(3, 148);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(245, 25);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "5 items in a line to win";
             // 
             // pctbMark
             // 
@@ -132,16 +165,6 @@
             this.txtPlayerName.Size = new System.Drawing.Size(135, 20);
             this.txtPlayerName.TabIndex = 0;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Elephant", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(3, 171);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(245, 25);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "5 items in a line to win";
-            // 
             // prcbCoolDown
             // 
             this.prcbCoolDown.Location = new System.Drawing.Point(4, 44);
@@ -157,26 +180,6 @@
             this.txtIP.TabIndex = 3;
             this.txtIP.Text = "127.0.0.1";
             // 
-            // btnLAN
-            // 
-            this.btnLAN.BackColor = System.Drawing.Color.Transparent;
-            this.btnLAN.ButtonText = "Connect";
-            this.btnLAN.Location = new System.Drawing.Point(4, 100);
-            this.btnLAN.Name = "btnLAN";
-            this.btnLAN.Size = new System.Drawing.Size(134, 32);
-            this.btnLAN.TabIndex = 6;
-            this.btnLAN.Click += new System.EventHandler(this.btnLAN_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Elephant", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(3, 146);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(245, 25);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "5 items in a line to win";
-            // 
             // tmCoolDown
             // 
             this.tmCoolDown.Tick += new System.EventHandler(this.tmCoolDown_Tick);
@@ -187,10 +190,11 @@
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuToolStripMenuItem,
-            this.gameModeToolStripMenuItem});
+            this.gameModeToolStripMenuItem,
+            this.changeLaguageToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(12, 46);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(142, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(315, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -202,31 +206,31 @@
             this.quitToolStripMenuItem});
             this.menuToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-            this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.menuToolStripMenuItem.Text = "Menu";
+            this.menuToolStripMenuItem.Size = new System.Drawing.Size(104, 20);
+            this.menuToolStripMenuItem.Text = "Bảng điều khiển";
             // 
             // newGameToolStripMenuItem
             // 
             this.newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
             this.newGameToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.newGameToolStripMenuItem.Text = "New game";
+            this.newGameToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.newGameToolStripMenuItem.Text = "Ván mới";
             this.newGameToolStripMenuItem.Click += new System.EventHandler(this.newGameToolStripMenuItem_Click);
             // 
             // undoToolStripMenuItem
             // 
             this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.undoToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.undoToolStripMenuItem.Text = "Undo";
+            this.undoToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.undoToolStripMenuItem.Text = "Đi lại";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             this.quitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
-            this.quitToolStripMenuItem.Text = "Quit";
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.quitToolStripMenuItem.Text = "Thoát";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
             // gameModeToolStripMenuItem
@@ -236,22 +240,51 @@
             this.playerVsComputerToolStripMenuItem});
             this.gameModeToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.gameModeToolStripMenuItem.Name = "gameModeToolStripMenuItem";
-            this.gameModeToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
-            this.gameModeToolStripMenuItem.Text = "Game Mode";
+            this.gameModeToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.gameModeToolStripMenuItem.Text = "Chế độ chơi";
             // 
             // playersToolStripMenuItem
             // 
             this.playersToolStripMenuItem.Name = "playersToolStripMenuItem";
-            this.playersToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.playersToolStripMenuItem.Text = "Player vs Player";
+            this.playersToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.playersToolStripMenuItem.Text = "Người Với Người";
             this.playersToolStripMenuItem.Click += new System.EventHandler(this.playersToolStripMenuItem_Click);
             // 
             // playerVsComputerToolStripMenuItem
             // 
             this.playerVsComputerToolStripMenuItem.Name = "playerVsComputerToolStripMenuItem";
-            this.playerVsComputerToolStripMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.playerVsComputerToolStripMenuItem.Text = "Player vs Computer";
+            this.playerVsComputerToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.playerVsComputerToolStripMenuItem.Text = "Người Với Máy";
             this.playerVsComputerToolStripMenuItem.Click += new System.EventHandler(this.playerVsComputerToolStripMenuItem_Click);
+            // 
+            // changeLaguageToolStripMenuItem
+            // 
+            this.changeLaguageToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            this.changeLaguageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiViet,
+            this.tsmiAnh});
+            this.changeLaguageToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.changeLaguageToolStripMenuItem.Name = "changeLaguageToolStripMenuItem";
+            this.changeLaguageToolStripMenuItem.Size = new System.Drawing.Size(120, 20);
+            this.changeLaguageToolStripMenuItem.Text = "Thay đổi ngôn ngữ";
+            // 
+            // tsmiViet
+            // 
+            this.tsmiViet.Checked = true;
+            this.tsmiViet.CheckOnClick = true;
+            this.tsmiViet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.tsmiViet.Name = "tsmiViet";
+            this.tsmiViet.Size = new System.Drawing.Size(152, 22);
+            this.tsmiViet.Text = "Tiếng Việt";
+            this.tsmiViet.CheckedChanged += new System.EventHandler(this.tsmiViet_CheckedChanged);
+            // 
+            // tsmiAnh
+            // 
+            this.tsmiAnh.CheckOnClick = true;
+            this.tsmiAnh.Name = "tsmiAnh";
+            this.tsmiAnh.Size = new System.Drawing.Size(152, 22);
+            this.tsmiAnh.Text = "Tiếng Anh";
+            this.tsmiAnh.CheckedChanged += new System.EventHandler(this.tsmiAnh_CheckedChanged);
             // 
             // btnExit
             // 
@@ -283,20 +316,24 @@
             this.btnMini.UseVisualStyleBackColor = true;
             this.btnMini.Click += new System.EventHandler(this.btnMini_Click);
             // 
-            // labelLogo
-            // 
-            this.labelLogo.AutoSize = true;
-            this.labelLogo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.labelLogo.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.labelLogo.Location = new System.Drawing.Point(4, 5);
-            this.labelLogo.Name = "labelLogo";
-            this.labelLogo.Size = new System.Drawing.Size(194, 21);
-            this.labelLogo.TabIndex = 11;
-            this.labelLogo.Text = "Game Caro By Nguyên.UIT";
-            // 
             // tmAnimationLabel
             // 
             this.tmAnimationLabel.Tick += new System.EventHandler(this.tmAnimationLabel_Tick);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel1.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.linkLabel1.LinkColor = System.Drawing.SystemColors.ButtonFace;
+            this.linkLabel1.Location = new System.Drawing.Point(7, 2);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(234, 25);
+            this.linkLabel1.TabIndex = 13;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Game Caro By Nguyên.UIT";
+            this.linkLabel1.VisitedLinkColor = System.Drawing.Color.Blue;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // Form1
             // 
@@ -304,8 +341,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
             this.ClientSize = new System.Drawing.Size(974, 577);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.panel3);
-            this.Controls.Add(this.labelLogo);
             this.Controls.Add(this.btnMini);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.panel2);
@@ -354,13 +391,16 @@
         private System.Windows.Forms.ToolStripMenuItem gameModeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playerVsComputerToolStripMenuItem;
-        private VistaButtonTest.VistaButton btnLAN;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnMini;
-        private System.Windows.Forms.Label labelLogo;
         private System.Windows.Forms.Timer tmAnimationLabel;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private VistaButtonTest.VistaButton btnLAN;
+        private System.Windows.Forms.ToolStripMenuItem changeLaguageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmiViet;
+        private System.Windows.Forms.ToolStripMenuItem tsmiAnh;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 

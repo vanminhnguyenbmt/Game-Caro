@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCaro", "GameCaro\GameCaro.csproj", "{E1883A70-833B-4E3C-ABDC-B59BD13E21F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VistaButton", "VistaButton\VistaButton.csproj", "{8FB8F7EC-5DF8-46F5-9AD5-902B9F5BD38E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomControl", "CustomControl\CustomControl.csproj", "{8FB8F7EC-5DF8-46F5-9AD5-902B9F5BD38E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

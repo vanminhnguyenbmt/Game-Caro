@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <xs:schema id="NewDataSet" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xs:element name="NewDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+      <xs:complexType>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="Language">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="viet" type="xs:string" minOccurs="0" />
+                <xs:element name="anh" type="xs:string" minOccurs="0" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:complexType>
+    </xs:element>
+  </xs:schema>
+  <Language>
+    <viet>Form1</viet>
+    <anh>Form1</anh>
+  </Language>
+  <Language>
+    <viet>Thay đổi ngôn ngữ</viet>
+    <anh>Change Language</anh>
+  </Language>
+  <Language>
+    <viet>Tiếng Việt</viet>
+    <anh>Vietnamese</anh>
+  </Language>
+  <Language>
+    <viet>Tiếng Anh</viet>
+    <anh>English</anh>
+  </Language>
+  <Language>
+    <viet>Kết Nối</viet>
+    <anh>Connect</anh>
+  </Language>
+  <Language>
+    <viet>Đạt được 5 ô trước sẽ thắng</viet>
+    <anh>5 items in a line to win</anh>
+  </Language>
+  <Language>
+    <viet>Chế độ chơi</viet>
+    <anh>Game mode</anh>
+  </Language>
+  <Language>
+    <viet>Người Với Người</viet>
+    <anh>Player vs Player</anh>
+  </Language>
+  <Language>
+    <viet>Người Với Máy</viet>
+    <anh>Player vs Computer</anh>
+  </Language>
+  <Language>
+    <viet>Bảng điều khiển</viet>
+    <anh>Menu</anh>
+  </Language>
+  <Language>
+    <viet>Ván mới</viet>
+    <anh>New game</anh>
+  </Language>
+  <Language>
+    <viet>Đi lại</viet>
+    <anh>Undo</anh>
+  </Language>
+  <Language>
+    <viet>Thoát</viet>
+    <anh>Quit</anh>
+  </Language>
+</NewDataSet>

@@ -590,12 +590,12 @@ namespace GameCaro
         //private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 99, 729, 6561, 59049 };
 
         //Mảng điểm ưu tiên tấn công
-        private long[] ArrayPointAttack = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
-        private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
+        //private long[] ArrayPointAttack = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
+        //private long[] ArrayPointDefend = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
 
         //Mảng điểm ưu tiên phòng ngự
-        //private long[] ArrayPointDefend = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
-        //private long[] ArrayPointAttack = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
+        private long[] ArrayPointDefend = new long[7] { 0, 9, 81, 729, 6561, 59049, 531441 };
+        private long[] ArrayPointAttack = new long[7] { 0, 3, 27, 243, 2187, 19683, 177147 };
 
         /// <summary>
         /// Khởi động điểm đi tiếp theo cho AI

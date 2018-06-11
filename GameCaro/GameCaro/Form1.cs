@@ -18,6 +18,7 @@ namespace GameCaro
         ChessBoardManager ChessBoard;
         SocketManager socket;
         Boolean isLanGame;
+        Language lang = new Language();
         #endregion
         public Form1()
         {
@@ -43,6 +44,27 @@ namespace GameCaro
         }
 
         #region Methods
+
+        private void btnLAN_Click(object sender, EventArgs e)
+        {
+            btnLAN.Enabled = false;
+            isLanGame = true;
+            socket.IP = txtIP.Text;
+
+            if (!socket.ConnectServer()) //không kết nối tới được server thì tiến hành tạo server
+            {
+                socket.isServer = true;
+                pnlChessBoard.Enabled = true;
+                socket.CreateServer();
+            }
+            else
+            {
+                socket.isServer = false;
+                pnlChessBoard.Enabled = false;
+                // client lắng nghe tin từ server
+                Listen();
+            }
+        }
 
         void EndGame()
         {
@@ -194,27 +216,6 @@ namespace GameCaro
             //txtIP.Text = socket.GetLocalIPAddress();
         }
 
-        private void btnLAN_Click(object sender, EventArgs e)
-        {
-            btnLAN.Enabled = false;
-            isLanGame = true;
-            socket.IP = txtIP.Text;
-
-            if (!socket.ConnectServer()) //không kết nối tới được server thì tiến hành tạo server
-            {
-                socket.isServer = true;
-                pnlChessBoard.Enabled = true;
-                socket.CreateServer();
-            }
-            else
-            {
-                socket.isServer = false;
-                pnlChessBoard.Enabled = false;
-                // client lắng nghe tin từ server
-                Listen();
-            }
-        }
-
         private void EnableElement(Boolean check)
         {
             isLanGame = check;
@@ -293,15 +294,17 @@ namespace GameCaro
                     break;
 
                 case (int)SocketCommand.END_GAME:
-                    if (ChessBoard.NumberPlayerWin == 0)
+                    this.Invoke((MethodInvoker)(() =>
                     {
-                        MessageBox.Show("Người chơi 1 thắng");
-                    }
-                    else if (ChessBoard.NumberPlayerWin == 1)
-                    {
-                        MessageBox.Show("Người chơi 2 thắng");
-                    }
-                    //MessageBox.Show(ChessBoard.NumberPlayerWin.ToString());
+                        if (ChessBoard.NumberPlayerWin == 0)
+                        {
+                            MessageBox.Show("Người chơi 1 thắng");
+                        }
+                        else if (ChessBoard.NumberPlayerWin == 1)
+                        {
+                            MessageBox.Show("Người chơi 2 thắng");
+                        }
+                    }));
                     break;
 
                 case (int)SocketCommand.TIME_OUT:
@@ -309,8 +312,11 @@ namespace GameCaro
                     break;
 
                 case (int)SocketCommand.QUIT:
-                    tmCoolDown.Stop();
-                    MessageBox.Show("Người chơi đã thoát");
+                    this.Invoke((MethodInvoker)(() =>
+                    {
+                        tmCoolDown.Stop();
+                        MessageBox.Show("Người chơi đã thoát");
+                    }));
                     break;
 
                 default:
@@ -364,7 +370,7 @@ namespace GameCaro
         private void tmAnimationLabel_Tick(object sender, EventArgs e)
         {
             //adding the characters one by one to the label2
-            if(i < s.Length - 1)
+            if (i < s.Length - 1)
             {
                 label2.Text += l[i].ToString();
             }
@@ -387,6 +393,35 @@ namespace GameCaro
         private void Form1_Load(object sender, EventArgs e)
         {
             SetupAnimationLabel();
+            btnLAN.ButtonText = "Kết nối";
+        }
+
+        private void tsmiViet_CheckedChanged(object sender, EventArgs e)
+        {
+            if (tsmiViet.Checked)
+            {
+                btnLAN.ButtonText = "Kết nối";
+                this.lang.SetLanguage((int)eLanguage.TiengViet);
+                this.lang.ChangeLanguage(this.Name, this);
+                this.tsmiAnh.Checked = false;
+            }
+        }
+
+        private void tsmiAnh_CheckedChanged(object sender, EventArgs e)
+        {
+            if (tsmiAnh.Checked)
+            {
+                btnLAN.ButtonText = "Connect";
+                this.lang.SetLanguage((int)eLanguage.TiengAnh);
+                this.lang.ChangeLanguage(this.Name, this);
+                this.tsmiViet.Checked = false;
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.linkLabel1.LinkVisited = true;
+            System.Diagnostics.Process.Start("https://www.facebook.com/Nguyen.Gamer.UIT");
         }
 
         private void SetupAnimationLabel()

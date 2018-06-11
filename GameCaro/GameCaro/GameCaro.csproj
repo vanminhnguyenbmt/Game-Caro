@@ -61,6 +61,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Language.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayInfo.cs" />
     <Compile Include="Program.cs" />
@@ -104,11 +105,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="caro.ico" />
+    <Content Include="Language\Form1.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VistaButton\VistaButton.csproj">
+    <ProjectReference Include="..\CustomControl\CustomControl.csproj">
       <Project>{8FB8F7EC-5DF8-46F5-9AD5-902B9F5BD38E}</Project>
-      <Name>VistaButton</Name>
+      <Name>CustomControl</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
