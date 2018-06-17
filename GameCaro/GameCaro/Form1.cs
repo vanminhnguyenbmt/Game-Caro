@@ -155,7 +155,7 @@ namespace GameCaro
                 if(isLanGame)
                 {
                     socket.Send(new SocketData((int)SocketCommand.TIME_OUT, "", new Point()));
-                }           
+                }
             }
         }
 
@@ -246,7 +246,7 @@ namespace GameCaro
                 {
                     SocketData data = (SocketData)socket.Receive();
 
-                    ProcessDate(data);
+                    ProcessData(data);
                 });
                 listenThread.IsBackground = true;
                 listenThread.Start();
@@ -257,7 +257,7 @@ namespace GameCaro
             }
         }
 
-        private void ProcessDate(SocketData data)
+        private void ProcessData(SocketData data)
         {
             switch (data.Command)
             {
